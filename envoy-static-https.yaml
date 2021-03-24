@@ -2,7 +2,7 @@ static_resources:
   listeners:
   - name: listener_http
     address:
-      socket_address: { address: 0.0.0.0, port_value: 10000 }
+      socket_address: { address: 0.0.0.0, port_value: 8080 }
     filter_chains:
     - filters:
       - name: envoy.http_connection_manager
@@ -38,13 +38,8 @@ static_resources:
             - name: backend
               domains:
               - "example.com"
-             routes:
+              routes:
               - match:
-                  prefix: "/envoy"
-                route:
-                  host_rewrite_literal: www.envoyproxy.io
-                  cluster: service_envoyproxy_io
-               - match:
                   prefix: "/service/1"
                 route:
                   cluster: service1
@@ -64,7 +59,7 @@ static_resources:
                 filename: "/etc/envoy/certs/example-com.key"
   clusters:
   - name: service1
-    connect_timeout: 30s
+    connect_timeout: 0.25s
     type: strict_dns
     lb_policy: round_robin
     hosts:
@@ -79,29 +74,10 @@ static_resources:
     - socket_address:
         address: 172.18.0.4
         port_value: 80
-  - name: service_envoyproxy_io
-    connect_timeout: 30s
-    type: LOGICAL_DNS
-    # Comment out the following line to test on v6 networks
-    dns_lookup_family: V4_ONLY
-    load_assignment:
-      cluster_name: service_envoyproxy_io
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: www.envoyproxy.io
-                port_value: 443
-    transport_socket:
-      name: envoy.transport_sockets.tls
-      typed_config:
-        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-        sni: www.envoyproxy.io
 
 admin:
   access_log_path: /tmp/admin_access.log
   address:
     socket_address:
       address: 0.0.0.0
-      port_value: 9901
+      port_value: 8001
