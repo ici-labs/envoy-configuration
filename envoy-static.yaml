@@ -29,16 +29,17 @@ static_resources:
                   prefix: "/"
                 route:
                   host_rewrite_literal: www.envoyproxy.io
-                  cluster: service_envoyproxy_io
-      tls_context:
-        common_tls_context:
-          tls_certificates:
+                  cluster: service_envoyproxy_io          
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            tls_certificates:
             - certificate_chain:
                 filename: "/etc/envoy/certs/example-com.crt"
               private_key:
-                filename: "/etc/envoy/certs/example-com.key"
-                 
-
+                filename: "/etc/envoy/certs/example-com.key"    
   clusters:
   - name: service_envoyproxy_io
     connect_timeout: 30s
