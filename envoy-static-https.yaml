@@ -40,7 +40,7 @@ static_resources:
               - "example.com"
              routes:
               - match:
-                  prefix: "/"
+                  prefix: "/envoy"
                 route:
                   host_rewrite_literal: www.envoyproxy.io
                   cluster: service_envoyproxy_io
