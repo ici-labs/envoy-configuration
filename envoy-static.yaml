@@ -30,6 +30,7 @@ static_resources:
                 route:
                   host_rewrite_literal: www.envoyproxy.io
                   cluster: service_envoyproxy_io
+      tls_context:
         common_tls_context:
           tls_certificates:
             - certificate_chain:
